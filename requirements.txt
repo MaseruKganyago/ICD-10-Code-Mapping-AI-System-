@@ -1,0 +1,41 @@
+# ICD-10 Medical Diagnosis Mapping System - Requirements
+#
+# This file contains all Python dependencies required to run the ICD-10 diagnosis
+# mapping system. The system uses hybrid keyword matching and semantic search with
+# Sentence-BERT to automatically map natural language medical diagnoses to 
+# standardized ICD-10 codes.
+#
+# Installation: pip install -r requirements.txt
+#
+# Core data processing
+pandas>=1.5.0
+numpy>=1.21.0
+openpyxl>=3.0.9
+
+# Machine Learning and NLP
+sentence-transformers>=2.2.0
+faiss-cpu>=1.7.3
+torch>=1.12.0
+transformers>=4.20.0
+
+# Text processing and fuzzy matching
+rapidfuzz>=2.13.0
+
+# Jupyter notebook support
+jupyter>=1.0.0
+ipykernel>=6.15.0
+notebook>=6.4.0
+
+# Additional dependencies for sentence-transformers
+scikit-learn>=1.0.0
+scipy>=1.8.0
+tqdm>=4.62.0
+
+# Optional: For GPU support (uncomment if using GPU)
+# faiss-gpu>=1.7.3
+# torch-gpu>=1.12.0
+
+# Development and testing (optional)
+# pytest>=7.0.0
+# black>=22.0.0
+# flake8>=4.0.0
