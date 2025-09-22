@@ -1,0 +1,335 @@
+{
+  "info": {
+    "name": "ICD-10 AI Code Mapping API",
+    "description": "Complete API collection for testing the ICD-10 AI Code Mapping System with hybrid keyword + semantic search using Sentence-BERT",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "version": "1.0.0"
+  },
+  "item": [
+    {
+      "name": "1. System Information",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/",
+          "host": ["{{baseUrl}}"],
+          "path": [""]
+        },
+        "description": "Get API information and available endpoints. This is a good starting point to verify the API is running."
+      },
+      "response": []
+    },
+    {
+      "name": "2. Initialize AI System",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": ""
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/initialize",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "initialize"]
+        },
+        "description": "⚠️ IMPORTANT: Run this first! Initializes the AI system by downloading the Sentence-BERT model and creating vector embeddings. Takes 5-15 minutes on first run."
+      },
+      "response": []
+    },
+    {
+      "name": "3. Check Initialization Status",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/initialize/status?include_steps=true",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "initialize", "status"],
+          "query": [
+            {
+              "key": "include_steps",
+              "value": "true",
+              "description": "Include detailed initialization steps"
+            }
+          ]
+        },
+        "description": "Check the progress of AI system initialization. Keep polling until status is 'completed' before using mapping endpoints."
+      },
+      "response": []
+    },
+    {
+      "name": "4. Single Diagnosis Mapping",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"diagnosis\": \"acute myocardial infarction\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/map",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "map"]
+        },
+        "description": "Map a single medical diagnosis to ICD-10 code using AI hybrid search (keyword + semantic matching)."
+      },
+      "response": []
+    },
+    {
+      "name": "4b. Single Mapping - Diabetes",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"diagnosis\": \"diabetes mellitus type 2\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/map",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "map"]
+        },
+        "description": "Test with a common diagnosis that should yield high confidence match."
+      },
+      "response": []
+    },
+    {
+      "name": "4c. Single Mapping - Heart Attack",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"diagnosis\": \"heart attack\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/map",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "map"]
+        },
+        "description": "Test semantic matching with colloquial term 'heart attack' → should map to 'myocardial infarction'."
+      },
+      "response": []
+    },
+    {
+      "name": "5. Batch Diagnosis Mapping",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"diagnoses\": [\n    \"chest pain\",\n    \"shortness of breath\",\n    \"headache\",\n    \"fever\",\n    \"cough\"\n  ]\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/map/batch",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "map", "batch"]
+        },
+        "description": "Map multiple diagnoses simultaneously (up to 100 per request). Efficient for bulk processing."
+      },
+      "response": []
+    },
+    {
+      "name": "5b. Batch Mapping - Complex Cases",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"diagnoses\": [\n    \"acute myocardial infarction\",\n    \"diabetes mellitus type 2 with complications\",\n    \"essential hypertension\",\n    \"chronic obstructive pulmonary disease\",\n    \"pneumonia unspecified\"\n  ]\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/map/batch",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "map", "batch"]
+        },
+        "description": "Test with complex medical terminology to evaluate AI accuracy."
+      },
+      "response": []
+    },
+    {
+      "name": "6. Browse ICD-10 Codes",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/codes?limit=10&offset=0",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "codes"],
+          "query": [
+            {
+              "key": "limit",
+              "value": "10",
+              "description": "Number of codes to return (max 100)"
+            },
+            {
+              "key": "offset",
+              "value": "0",
+              "description": "Starting position for pagination"
+            }
+          ]
+        },
+        "description": "Browse available ICD-10 codes with pagination. Useful for exploring the database."
+      },
+      "response": []
+    },
+    {
+      "name": "6b. Browse Codes - Page 2",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/codes?limit=20&offset=100",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "codes"],
+          "query": [
+            {
+              "key": "limit",
+              "value": "20",
+              "description": "Number of codes to return"
+            },
+            {
+              "key": "offset",
+              "value": "100",
+              "description": "Skip first 100 codes"
+            }
+          ]
+        },
+        "description": "Test pagination with different offset."
+      },
+      "response": []
+    },
+    {
+      "name": "7. Search - Heart Disease",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/search?q=heart disease&limit=5",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "search"],
+          "query": [
+            {
+              "key": "q",
+              "value": "heart disease",
+              "description": "Search query"
+            },
+            {
+              "key": "limit",
+              "value": "5",
+              "description": "Max results to return"
+            }
+          ]
+        },
+        "description": "AI-powered semantic search for ICD-10 codes related to heart disease."
+      },
+      "response": []
+    },
+    {
+      "name": "7b. Search - Diabetes",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/search?q=diabetes&limit=10",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "search"],
+          "query": [
+            {
+              "key": "q",
+              "value": "diabetes",
+              "description": "Search for diabetes-related codes"
+            },
+            {
+              "key": "limit",
+              "value": "10",
+              "description": "Return top 10 matches"
+            }
+          ]
+        },
+        "description": "Search for diabetes-related ICD-10 codes using semantic matching."
+      },
+      "response": []
+    },
+    {
+      "name": "7c. Search - Respiratory",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/search?q=breathing problems&limit=8",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "search"],
+          "query": [
+            {
+              "key": "q",
+              "value": "breathing problems",
+              "description": "Colloquial term for respiratory issues"
+            },
+            {
+              "key": "limit",
+              "value": "8",
+              "description": "Return 8 results"
+            }
+          ]
+        },
+        "description": "Test semantic search with colloquial medical terms."
+      },
+      "response": []
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Set baseUrl if not already set",
+          "if (!pm.environment.get('baseUrl')) {",
+          "    pm.environment.set('baseUrl', 'http://localhost:3000');",
+          "}"
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000",
+      "type": "string",
+      "description": "Base URL for ICD-10 AI API"
+    }
+  ]
+}
